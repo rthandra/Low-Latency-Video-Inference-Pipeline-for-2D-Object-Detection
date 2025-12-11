@@ -1,5 +1,5 @@
-/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/build/CMakeFiles/image_inference.dir
-/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/build/CMakeFiles/camera_inference.dir
-/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/build/CMakeFiles/video_inference.dir
-/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/build/CMakeFiles/edit_cache.dir
-/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/build/CMakeFiles/rebuild_cache.dir
+/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/build/CMakeFiles/image_inference.dir
+/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/build/CMakeFiles/video_inference.dir
+/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/build/CMakeFiles/camera_inference.dir
+/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/build/CMakeFiles/edit_cache.dir
+/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/build/CMakeFiles/rebuild_cache.dir

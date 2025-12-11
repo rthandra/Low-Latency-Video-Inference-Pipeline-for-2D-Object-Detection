@@ -28,7 +28,7 @@
  *    provided paths.
  * 3. Run the executable to initiate the object detection process.
  *
- * Author: Megha Agrawal
+ * Author: Megha Agrawal, Rushika Thandra
  * Date: 11.18.2025
  *
  */
@@ -45,7 +45,7 @@
 #include <atomic>
 #include <condition_variable>
 #include "../include/YOLO11-OBB.hpp" 
-
+#include <chrono>
 // Thread-safe queue implementation
 template <typename T>
 class SafeQueue {
@@ -85,16 +85,20 @@ private:
 };
 
 int main(){
+
+    // Timing variables
+    double totalComputeTime = 0.0;
+    int computeFrames = 0;
+
     // Paths to the model, labels, input video, and output video
     const std::string labelsPath = "../../bdd100k_classes.txt";
     const std::string videoPath = "../../input_video.mov"; // Input video path
     const std::string outputPath = "../../output_video.mov"; // Output video path
     
-    const std::string modelPath = "../../yolo_finetuned_bdd100k.onnx"; //V11
+    const std::string modelPath = "/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/yolo_finetuned_bdd100k_lightweight.onnx"; // V12
+    //const std::string modelPath = "../../yolo_finetuned_bdd100k.onnx"; //V11
     // const std::string modelPath = "../models/yolo11n-obb.onnx"; //V11
     // const std::string modelPath = "../models/yolov8n-obb.onnx"; //V8
-
-
 
     // Initialize the YOLO detector
     bool isGPU = true; // Set to false for CPU processing
@@ -114,14 +118,24 @@ int main(){
     int fps = static_cast<int>(cap.get(cv::CAP_PROP_FPS));
     int fourcc = static_cast<int>(cap.get(cv::CAP_PROP_FOURCC)); // Get codec of input video
 
-    // Create a VideoWriter object to save the output video with the same codec
-    //cv::VideoWriter out(outputPath, fourcc, fps, cv::Size(frameWidth, frameHeight), true);
-    cv::VideoWriter out( outputPath, cv::VideoWriter::fourcc('m','p','4','v'), fps,
-                        cv::Size(frameWidth, frameHeight), true);
+    // Target processing/output size
+    //int outWidth = 320;
+    //int outHeight = 320;
+
+// Create a VideoWriter object to save the output video at 640x640
+    cv::VideoWriter out(
+        outputPath,
+        cv::VideoWriter::fourcc('m','p','4','v'),
+        fps,
+        //cv::Size(outWidth, outHeight),
+        cv::Size(frameWidth, frameHeight),
+        true
+    );
     if (!out.isOpened()){
         std::cerr << "Error: Could not open the output video file for writing!\n";
         return -1;
     }
+
 
     // Thread-safe queues and processing...
     // Thread-safe queues
@@ -149,10 +163,33 @@ int main(){
     std::thread processingThread([&]() {
         cv::Mat frame;
         int frameIndex = 0;
+        //int skipFactor = 3; // Process every 3rd frame
+        
         while (frameQueue.dequeue(frame)){
+             //Skip frames to speed up inference
+            /*if (frameIndex % skipFactor != 0) {
+                frameIndex++;
+                continue;
+            }*/
             std::cout << "[PROCESS] frame " << frameIndex << std::endl;
+
+            //Resize frame to 640x640 before detection
+            //cv::resize(frame, frame, cv::Size(outWidth, outHeight));
+         
             // Detect objects in the frame
+            //std::vector<Detection> results = detector.detect(frame);
+                // --- YOLO Compute Time Measurement Start ---
+            auto computeStart = std::chrono::high_resolution_clock::now();
+
+            // Detect objects in the frame (YOLO inference)
             std::vector<Detection> results = detector.detect(frame);
+
+            auto computeEnd = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> computeDiff = computeEnd - computeStart;
+
+            totalComputeTime += computeDiff.count();
+            computeFrames++;
+// --- YOLO Compute Time Measurement End ---
 
             // Draw bounding boxes on the frame
             detector.drawBoundingBox(frame, results); // Uncomment for mask drawing
@@ -178,6 +215,19 @@ int main(){
     captureThread.join();
     processingThread.join();
     writingThread.join();
+
+    // Print timing results
+    std::cout << "\n          COMPUTE TIME REPORT         \n";
+    std::cout << "Total YOLO Compute Time (inference only): " 
+          << totalComputeTime << " seconds\n";
+
+    if (computeFrames > 0) {
+        std::cout << "Frames processed (YOLO inference): " 
+              << computeFrames << "\n";
+
+        std::cout << "Average time per frame: "
+              << (totalComputeTime / computeFrames) << " seconds\n";
+}
 
     // Release resources
     cap.release();

@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/src/camera_inference.cpp" "CMakeFiles/camera_inference.dir/src/camera_inference.cpp.o" "gcc" "CMakeFiles/camera_inference.dir/src/camera_inference.cpp.o.d"
+  "/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/src/camera_inference.cpp" "CMakeFiles/camera_inference.dir/src/camera_inference.cpp.o" "gcc" "CMakeFiles/camera_inference.dir/src/camera_inference.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

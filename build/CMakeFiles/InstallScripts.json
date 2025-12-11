@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/agraw1/Desktop/Fall2025/Intro-to-parallel/project/Code/YOLOv11_OBB/build/cmake_install.cmake"
+		"/Users/rthandra/Desktop/Yolov11_bdd100k_onnx_inference/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
